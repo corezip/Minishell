@@ -55,10 +55,10 @@ void				getcommand(char **line, t_var *x)
 		del_env(x, comandos[1]);
 	else if (!ft_strcmp(comandos[0], "env"))
 		print_env(x);
-	else if (!ft_strcmp(comandos[0], "ls"))
-		command_ls(x, comandos);
 	else if (command_cmp(x, comandos) == 1)
 		return ;
+	else
+		ft_printf("zsh: command not found: %s\n", comandos[0]);
 	ft_memdel((void**)&comandos);
 }
 

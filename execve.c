@@ -22,7 +22,7 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 	matrix = matrix_list(x);
 	tmp = ft_strjoin(path, "/");
 	tmp2 = ft_strjoin(tmp, command);
-	if (access(tmp, R_OK) == 0)
+	if (access(tmp2, X_OK) == 0)
 	{
 		ft_memdel((void**)&tmp);
 		if ((pid = fork()) == 0)
@@ -53,7 +53,7 @@ int				command_cmp(t_var *x, char **var)
 	{
 		if (!ft_strncmp("PATH=", matrix[i], 5))
 		{
-			path_mat = ft_strsplit(matrix[i], ':');
+			path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
 			while (path_mat[++j])
 			{
 				if (print_command(x, path_mat[j],  var[0], var) == 1)
@@ -62,24 +62,4 @@ int				command_cmp(t_var *x, char **var)
 		}
 	}
 	return (0);
-}
-
-void				command_ls(t_var *x, char **var)
-{
-	pid_t				pid;
-	char			**matrix;
-	int i;
-
-	i = -1;
-	matrix = matrix_list(x);
-	if ((pid = fork())  == 0)
-	{
-		execve("/bin/ls", var, matrix);
-		return ;
-	}
-	else if (pid > 0)
-		pid = wait(0);
-	else
-		ft_printf("Error!\n");
-	ft_memdel((void**)&matrix);
 }

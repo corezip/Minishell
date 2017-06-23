@@ -36,7 +36,7 @@ void				cd_mod(t_var *x)
 		ft_memdel((void**)&tmp);
 	}
 	else
-		ft_printf("Error chdir\n");
+		ft_printfcolor("Error chdir\n");
 }
 
 /*
@@ -48,20 +48,28 @@ void				cd_mod(t_var *x)
 
 int					front_path(t_var *x, char *var)
 {
-	char			*tmp;
-	char			*tmp2;
-
-	tmp = ft_strjoin(x->path, "/");
-	tmp2 = ft_strjoin(tmp, var);
-	if (access(tmp2, F_OK) == 0)
+	if (!ft_strcmp(var, "/"))
 	{
-		x->tmp_path = ft_strdup(tmp2);
-		ft_memdel((void**)&tmp);
-		ft_memdel((void**)&tmp2);
+		x->f_tmp = ft_strdup("/");
+		x->f_tmp2 = ft_strdup("/");
+	}
+	else
+	{
+		if (!ft_strcmp(x->path, "/"))
+			x->f_tmp = ft_strdup("/");
+		else
+			x->f_tmp = ft_strjoin(x->path, "/");
+		x->f_tmp2 = ft_strjoin(x->f_tmp, var);
+	}
+	if (access(x->f_tmp2, F_OK) == 0)
+	{
+		x->tmp_path = ft_strdup(x->f_tmp2);
+		ft_memdel((void**)&x->f_tmp);
+		ft_memdel((void**)&x->f_tmp2);
 		return (1);
 	}
-	ft_memdel((void**)&tmp);
-	ft_memdel((void**)&tmp2);
+	ft_memdel((void**)&x->f_tmp);
+	ft_memdel((void**)&x->f_tmp2);
 	return (0);
 }
 
@@ -78,6 +86,8 @@ int					back_path(t_var *x)
 
 	tmp = ft_strsub(x->path_back, 0, ft_strlen(x->path_back) -
 	ft_strlen(ft_strrchr(x->path_back, '/')));
+	if (ft_strlen(tmp) <= 0)
+		tmp = ft_strdup("/");
 	if (access(tmp, F_OK) == 0)
 	{
 		x->tmp_path = ft_strdup(tmp);
@@ -112,30 +122,30 @@ void				bonus_cd(t_var *x)
 ** las carpetas.
 */
 
-int					cd_access(t_var *x, char **var)
+void					cd_access(t_var *x, char **var)
 {
-	char			**tmp;
-
 	x->i = -1;
 	x->oldpath = ft_strdup(x->path);
 	x->path_back = ft_strdup(x->path);
-	tmp = ft_strsplit(var[1], '/');
-	while (tmp[++x->i])
+	if (!ft_strcmp(var[1], "/"))
+		x->cd_tmp = ft_strsplit(var[1], '-');
+	else
+		x->cd_tmp = ft_strsplit(var[1], '/');
+	while (x->cd_tmp[++x->i])
 	{
-		if (!ft_strcmp(".", tmp[x->i]))
-			return (1);
-		else if (!ft_strcmp("..", tmp[x->i]))
+		if (!ft_strcmp(".", x->cd_tmp[x->i]))
+			return ;
+		else if (!ft_strcmp("..", x->cd_tmp[x->i]))
 			x->flag = back_path(x);
 		else
-			x->flag = front_path(x, tmp[x->i]);
+			x->flag = front_path(x, x->cd_tmp[x->i]);
 		if (x->flag == 0)
 		{
-			ft_printf("cd: no such file or directory: %s\n", tmp[x->i]);
-			ft_memdel((void**)&tmp);
-			return (1);
+			ft_printfcolor("cd: no such file or directory: %s\n", x->cd_tmp[x->i], 34);
+			ft_memdel((void**)&x->cd_tmp);
+			return ;
 		}
 	}
+	ft_memdel((void**)&x->cd_tmp);
 	bonus_cd(x);
-	ft_memdel((void**)&tmp);
-	return (0);
 }
