@@ -30,13 +30,12 @@ void				init_var(t_var *x)
 	pw = getpwuid(filestat.st_uid);
 	x->name = pw->pw_name;
 	x->flag = 1;
-	all_command(x);
 }
 
 /*
 ** Getcommand
 ** ---------------------------------------------------------------------------
-** Esta funcion separa el comando instroducido para su seleccion de proceso.
+** Esta funcion separa el comando introducido para su seleccion de proceso.
 */
 
 void				getcommand(char **line, t_var *x)
@@ -58,6 +57,8 @@ void				getcommand(char **line, t_var *x)
 		print_env(x);
 	else if (!ft_strcmp(comandos[0], "ls"))
 		command_ls(x, comandos);
+	else if (command_cmp(x, comandos) == 1)
+		return ;
 	ft_memdel((void**)&comandos);
 }
 

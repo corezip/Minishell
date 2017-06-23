@@ -45,10 +45,10 @@ void					print_env(t_var *x);
 void					command_ls(t_var *x, char **var);
 void					del_env(t_var *x, char *str);
 void					choose_echo(int i, char **var, t_var *x);
-void					all_command(t_var *x);
 int						front_path(t_var *x, char *var);
 int						back_path(t_var *x);
 int						cd_access(t_var *x, char **var);
+int						command_cmp(t_var *x, char **var);
 char					**matrix_list(t_var *x);
 
 #endif
