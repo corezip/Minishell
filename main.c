@@ -72,9 +72,11 @@ int					main(int ac, char **av)
 {
 	char			*line;
 	t_var			*x;
+	char			**fake;
 
 	x = (t_var *)malloc(sizeof(t_var));
 	init_var(x);
+	fake = ft_strsplit(av[0], '/');
 	while (1)
 	{
 		ft_printf("@%s$> ", x->name);
@@ -86,4 +88,5 @@ int					main(int ac, char **av)
 	}
 	ft_memdel((void**)&line);
 	ft_memdel((void**)&x);
+	return (ac);
 }

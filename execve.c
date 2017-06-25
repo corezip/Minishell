@@ -40,7 +40,6 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 
 int				command_cmp(t_var *x, char **var)
 {
-	char			*path;
 	char			**matrix;
 	char			**path_mat;
 	int				i;
