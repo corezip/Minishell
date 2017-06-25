@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+void				free_struct(t_var *x)
+{
+	ft_memdel((void**)&x->path);
+	ft_lstdel(&x->head, ft_bzero);
+}
+
 /*
 ** Init_var
 ** ---------------------------------------------------------------------------
@@ -82,11 +88,15 @@ int					main(int ac, char **av)
 		ft_printf("@%s$> ", x->name);
 		get_next_line(0, &line);
 		if (!ft_strcmp(line, "exit"))
+		{
+			free_struct(x);
 			exit(3);
+		}
 		if (ft_strlen(line))
 			getcommand(&line, x);
 	}
 	ft_memdel((void**)&line);
 	ft_memdel((void**)&x);
+	ft_memdel((void**)&fake);
 	return (ac);
 }
