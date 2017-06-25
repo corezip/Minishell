@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+/*
+** Matrix_list
+** ---------------------------------------------------------------------------
+** Esta funcion se encarga de crear una matriz doble con todos los datos que
+** contiene t_list head(contiene los env), y regresando la.
+*/
+
 char				**matrix_list(t_var *x)
 {
 	t_list			*tmp;
