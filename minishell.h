@@ -35,6 +35,7 @@ typedef	struct			s_var
 	char				**cd_tmp;
 	int					flag;
 	int					i;
+	int					z;
 	t_list				*head;
 	t_list				*tmp;
 }						t_var;

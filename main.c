@@ -26,16 +26,22 @@ void				free_struct(t_var *x)
 
 void				init_var(t_var *x)
 {
-	struct stat		filestat;
-	struct passwd	*pw;
+	t_list			*tmp;
 
 	x->path = (char *)malloc(sizeof(100));
 	x->path = ft_strdup(getcwd(NULL, 0));
 	get_env(x);
-	lstat(x->path, &filestat);
-	pw = getpwuid(filestat.st_uid);
-	x->name = pw->pw_name;
+	tmp = x->head;
+	while(tmp)
+	{
+		if (!ft_strncmp("USER=", tmp->content, 5))
+			x->name = ft_strsub(tmp->content, ft_strlen(ft_strchr(tmp->content,
+				'=') + 1) + 1, ft_strlen(ft_strchr(tmp->content, '=') + 1) + 1);
+		tmp = tmp->next;
+	}
+	free (tmp);
 	x->flag = 1;
+	x->z = 0;
 }
 
 /*
@@ -52,7 +58,7 @@ void				getcommand(char **line, t_var *x)
 	if (!ft_strcmp(comandos[0], "echo"))
 		choose_echo(1, comandos, x);
 	else if (!ft_strcmp(comandos[0], "pwd"))
-		ft_printf("%s\n", x->path);
+		ft_printfcolor("%s\n", x->path, 39);
 	else if (!ft_strcmp(comandos[0], "cd"))
 		cd_access(x, comandos);
 	else if (!ft_strcmp(comandos[0], "setenv"))
@@ -61,10 +67,10 @@ void				getcommand(char **line, t_var *x)
 		del_env(x, comandos[1]);
 	else if (!ft_strcmp(comandos[0], "env"))
 		print_env(x);
-	else if (command_cmp(x, comandos) == 1)
-		return ;
+	else if (command_cmp(x, comandos) == 1 && x->z == 1)
+		x->z = 0;
 	else
-		ft_printf("zsh: command not found: %s\n", comandos[0]);
+		ft_printfcolor("zsh: command not found: %s\n", comandos[0], 97);
 	ft_memdel((void**)&comandos);
 }
 
@@ -85,7 +91,7 @@ int					main(int ac, char **av)
 	fake = ft_strsplit(av[0], '/');
 	while (1)
 	{
-		ft_printf("@%s$> ", x->name);
+		ft_printfcolor("%s%s%s ", "@", 36, x->name, 36, "$>", 36);
 		get_next_line(0, &line);
 		if (!ft_strcmp(line, "exit"))
 		{

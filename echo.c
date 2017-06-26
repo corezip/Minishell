@@ -60,7 +60,7 @@ void				choose_echo(int i, char **var, t_var *x)
 			{
 				if (!ft_strncmp(ft_strjoin("$", tmp->content),
 					ft_strjoin(var[i], "="), ft_strlen(var[i] + 1)))
-					ft_printf("%s ", ft_strchr(tmp->content, '=') + 1);
+					ft_printfcolor("%s ", ft_strchr(tmp->content, '=') + 1, 31);
 				tmp = tmp->next;
 			}
 		}

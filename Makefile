@@ -14,12 +14,12 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@make -C libft/
 	@$(CC) $(OBJ) -o $(NAME) -L libft/ -lft
-	@echo "\033[32mFT_LS: Built ft_ls. ~(˘▾˘~) \033[0m"
+	@echo "\033[32mMinishell: Built ft_ls. ~(˘▾˘~) \033[0m"
 
 clean:
 	@make -C libft/ clean
 	@rm -rf $(OBJ)
-	@echo "\033[32mFT_LS: Cleaned up object files. ~(˘▾˘~) \033[0m"
+	@echo "\033[32mMinishell: Cleaned up object files. ~(˘▾˘~) \033[0m"
 
 fclean: clean
 	@$(MAKE) -C ./libft/ fclean

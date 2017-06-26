@@ -34,6 +34,7 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 	tmp2 = ft_strjoin(tmp, command);
 	if (access(tmp2, X_OK) == 0)
 	{
+		x->z = 1;
 		ft_memdel((void**)&tmp);
 		if ((pid = fork()) == 0)
 		{
@@ -83,9 +84,16 @@ int				command_cmp(t_var *x, char **var)
 			while (path_mat[++j])
 			{
 				if (print_command(x, path_mat[j],  var[0], var) == 1)
+				{
+					x->z = 1;
+					ft_memdel((void**)&matrix);
+					ft_memdel((void**)&path_mat);
 					return (1);
+				}
 			}
 		}
 	}
+	if (x->z == 1)
+		return (1);
 	return (0);
 }

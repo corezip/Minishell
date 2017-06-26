@@ -25,7 +25,7 @@ void				print_env(t_var *x)
 	tmp = x->head;
 	while (tmp)
 	{
-		ft_printf("%s\n", tmp->content);
+		ft_printfcolor("%s\n", tmp->content, 39);
 		tmp = tmp->next;
 	}
 	free(tmp);
