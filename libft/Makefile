@@ -96,7 +96,8 @@ SRC =	ft_atoi.c \
 		get_next_line.c \
 		ft_lstaddback.c \
 		ft_lstdeletenode.c \
-		ft_printfcolor.c
+		ft_printfcolor.c \
+		ft_matrix.c
 
 OBJ = $(SRC:.c=.o)
 

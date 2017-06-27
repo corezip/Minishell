@@ -50,9 +50,10 @@ void					command_ls(t_var *x, char **var);
 void					del_env(t_var *x, char *str);
 void					choose_echo(int i, char **var, t_var *x);
 void					cd_access(t_var *x, char **var);
+void					slash_found(char **var, t_var *x, int i);
 int						front_path(t_var *x, char *var);
 int						back_path(t_var *x);
-int						command_cmp(t_var *x, char **var);
+int						command_cmp(t_var *x, char **var, int i, int j);
 char					**matrix_list(t_var *x);
 
 #endif

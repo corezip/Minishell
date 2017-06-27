@@ -62,20 +62,18 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 ** --- 1.- x (estructura donde se almacena la t_list donde esta env).
 ** --- 2.- var[0] (este es el ejecutable a comprobar y a ejecutar en la
 **         siguiente en caso de que exista).
-** --- 3.- var (matriz que contiene el nombre del ejecutable con las flags en
-**         caso de que contenga).
+** --- 3.- var (matriz que contiene el nombre del ejecutable con las flags
+** ---en caso de que contenga).
 */
 
-int				command_cmp(t_var *x, char **var)
+int				command_cmp(t_var *x, char **var, int i, int j)
 {
-	char			**matrix;
-	char			**path_mat;
-	int				i;
-	int				j;
+	char		**matrix;
+	char		**path_mat;
+	int			z;
 
-	j = -1;
-	i = -1;
 	matrix = matrix_list(x);
+	z = -1;
 	while (matrix[++i])
 	{
 		if (!ft_strncmp("PATH=", matrix[i], 5))
@@ -83,9 +81,8 @@ int				command_cmp(t_var *x, char **var)
 			path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
 			while (path_mat[++j])
 			{
-				if (print_command(x, path_mat[j],  var[0], var) == 1)
+				if (print_command(x, path_mat[j], var[0], var) == 1)
 				{
-					x->z = 1;
 					ft_memdel((void**)&matrix);
 					ft_memdel((void**)&path_mat);
 					return (1);
@@ -93,7 +90,33 @@ int				command_cmp(t_var *x, char **var)
 			}
 		}
 	}
-	if (x->z == 1)
-		return (1);
 	return (0);
+}
+
+/*
+** slash_found
+** ---------------------------------------------------------------------------
+** Esta funcion hace el recorte del path de las carpetas de los ejecutables.
+*/
+
+void			slash_found(char **var, t_var *x, int i)
+{
+	char		**tmp;
+	int			z;
+	z = 1;
+	while (var[i])
+		i++;
+	tmp = (char**)ft_memalloc(sizeof(char*) * i + 1);
+	tmp[0] = ft_strdup(ft_strrchr(var[0], '/') + 1);
+	while (var[z] != '\0')
+	{
+		tmp[z] = ft_strdup(var[z]);
+		z++;
+	}
+	tmp[z] = NULL;
+	if (command_cmp(x, tmp, -1, -1) == 0 && x->z == 1)
+		x->z = 0;
+	else
+		ft_printfcolor("zsh: command not found: %s\n", var[0], 97);
+	ft_memdel((void**)&tmp);
 }

@@ -46,6 +46,14 @@ void				cd_mod(t_var *x)
 ** sea correcto pero en forma de introduccirse en carpetas.
 */
 
+// void				new_front(t_var *x, char *var)
+// {
+// 	if (!ft_strcmp(var, "-"))
+// 	{
+// 		trabajar aqui!!!!!!!
+// 	}
+// }
+
 int					front_path(t_var *x, char *var)
 {
 	if (!ft_strcmp(var, "/"))
@@ -68,6 +76,8 @@ int					front_path(t_var *x, char *var)
 		ft_memdel((void**)&x->f_tmp2);
 		return (1);
 	}
+	// else
+	// 	new_front(x, var);
 	ft_memdel((void**)&x->f_tmp);
 	ft_memdel((void**)&x->f_tmp2);
 	return (0);
@@ -122,7 +132,7 @@ void				bonus_cd(t_var *x)
 ** las carpetas.
 */
 
-void					cd_access(t_var *x, char **var)
+void				cd_access(t_var *x, char **var)
 {
 	x->i = -1;
 	x->oldpath = ft_strdup(x->path);
@@ -141,7 +151,8 @@ void					cd_access(t_var *x, char **var)
 			x->flag = front_path(x, x->cd_tmp[x->i]);
 		if (x->flag == 0)
 		{
-			ft_printfcolor("cd: no such file or directory: %s\n", x->cd_tmp[x->i], 34);
+			ft_printfcolor("cd: no such file or directory: %s\n",
+				x->cd_tmp[x->i], 34);
 			ft_memdel((void**)&x->cd_tmp);
 			return ;
 		}

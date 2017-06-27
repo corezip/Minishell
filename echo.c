@@ -69,5 +69,4 @@ void				choose_echo(int i, char **var, t_var *x)
 		i++;
 	}
 	write(1, "\n", 1);
-	free(tmp);
 }

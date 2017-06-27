@@ -16,6 +16,7 @@ void				free_struct(t_var *x)
 {
 	ft_memdel((void**)&x->path);
 	ft_lstdel(&x->head, ft_bzero);
+	ft_memdel((void**)&x->name);
 }
 
 /*
@@ -32,14 +33,14 @@ void				init_var(t_var *x)
 	x->path = ft_strdup(getcwd(NULL, 0));
 	get_env(x);
 	tmp = x->head;
-	while(tmp)
+	while (tmp)
 	{
 		if (!ft_strncmp("USER=", tmp->content, 5))
-			x->name = ft_strsub(tmp->content, ft_strlen(ft_strchr(tmp->content,
-				'=') + 1) + 1, ft_strlen(ft_strchr(tmp->content, '=') + 1) + 1);
+			x->name = ft_strsub(tmp->content, ft_strlen((ft_strchr(tmp->content,
+				'=') + 1) + 1), ft_strlen((ft_strchr(tmp->content, '=') + 1)));
 		tmp = tmp->next;
 	}
-	free (tmp);
+	free(tmp);
 	x->flag = 1;
 	x->z = 0;
 }
@@ -65,9 +66,12 @@ void				getcommand(char **line, t_var *x)
 		set_env(x, comandos);
 	else if (!ft_strcmp(comandos[0], "unsetenv"))
 		del_env(x, comandos[1]);
-	else if (!ft_strcmp(comandos[0], "env"))
+	else if (!ft_strcmp(comandos[0], "env") ||
+		!ft_strcmp("/user/bin/env", comandos[0]))
 		print_env(x);
-	else if (command_cmp(x, comandos) == 1 && x->z == 1)
+	else if (comandos[0][0] == '/')
+		slash_found(comandos, x, 0);
+	else if (command_cmp(x, comandos, -1, -1) == 0 && x->z == 1)
 		x->z = 0;
 	else
 		ft_printfcolor("zsh: command not found: %s\n", comandos[0], 97);
