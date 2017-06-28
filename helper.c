@@ -12,6 +12,88 @@
 
 #include "minishell.h"
 
+void				pre_cd(t_var *x, char **var)
+{
+	int				i;
+	char			*tmp;
+	char			*final;
+	char			**matrix;
+
+	i = 0;
+	while (var[i])
+		i++;
+	matrix = (char**)malloc(sizeof(char*) * 3);
+	matrix[0] = ft_strdup("cd");
+	if (i > 2)
+	{
+		i = 0;
+		while (var[++i] && var[i + 1])
+		{
+			if (i > 1)
+			{
+				ft_memdel((void**)&tmp);
+				tmp = ft_strjoin(final, " ");
+			} 
+			else
+				tmp = ft_strjoin(var[i], " ");
+			if (i > 1)
+				ft_memdel((void**)&final);
+			final = ft_strjoin(tmp, var[i + 1]);
+		}
+		matrix[1] = ft_strdup(final);
+		matrix[2] = NULL;
+		cd_access(x, matrix);
+	}
+	else
+		cd_access(x, var);
+}
+
+/*
+** Cd_mod
+** ---------------------------------------------------------------------------
+** Se encarga de hacer los cambios en los path(nuevo y viejo).
+*/
+
+void				cd_mod(t_var *x)
+{
+	char			*tmp;
+
+	if (chdir(x->path) == 0)
+	{
+		del_env(x, "PWD");
+		tmp = ft_strjoin("PWD=", x->path);
+		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
+		ft_lstaddback(&x->head, x->tmp);
+		ft_memdel((void**)&tmp);
+		del_env(x, "OLDPWD");
+		tmp = ft_strjoin("OLDPWD=", x->oldpath);
+		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
+		ft_lstaddback(&x->head, x->tmp);
+		ft_memdel((void**)&tmp);
+	}
+	else
+		ft_printfcolor("Error chdir\n");
+}
+
+/*
+** New_paths
+** ---------------------------------------------------------------------------
+** Tipo ft_swap pero con matrices.
+*/
+
+void			new_paths(t_var *x, char *var)
+{
+	char		*tmp;
+
+	tmp = ft_strdup(x->path);
+	ft_memdel((void**)&x->path);
+	x->path = ft_strdup(var);
+	ft_memdel((void**)&x->oldpath);
+	x->oldpath = ft_strdup(tmp);
+	x->tmp_path = ft_strdup(x->path);
+	ft_memdel((void**)&tmp);
+}
+
 /*
 ** Matrix_list
 ** ---------------------------------------------------------------------------

@@ -13,30 +13,41 @@
 #include "minishell.h"
 
 /*
-** Cd_mod
+** Nwe_front
 ** ---------------------------------------------------------------------------
-** Se encarga de hacer los cambios en los path(nuevo y viejo).
+** Se encarga de verificar que el path sea "/" junto con algo mas.
 */
 
-void				cd_mod(t_var *x)
+int					new_front(t_var *x, char *var)
 {
-	char			*tmp;
+	char 			*tmp;
 
-	if (chdir(x->path) == 0)
+	if (!ft_strcmp(var, "-"))
 	{
-		del_env(x, "PWD");
-		tmp = ft_strjoin("PWD=", x->path);
-		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-		ft_lstaddback(&x->head, x->tmp);
+		tmp = ft_strdup(x->path);
+		ft_memdel((void**)&x->path);
+		x->path = ft_strdup(x->tmp_path);
+		ft_memdel((void**)&x->tmp_path);
+		x->tmp_path = ft_strdup(tmp);
 		ft_memdel((void**)&tmp);
-		del_env(x, "OLDPWD");
-		tmp = ft_strjoin("OLDPWD=", x->oldpath);
-		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-		ft_lstaddback(&x->head, x->tmp);
-		ft_memdel((void**)&tmp);
+		/*
+			crear funcion para recuperar el path viejo
+		*/
+		printf("PATH: %s\nOLDPATH: %s\nTMPPATH: %s\n", x->path, x->oldpath, x->tmp_path);
+		return (1);
 	}
 	else
-		ft_printfcolor("Error chdir\n");
+	{
+		tmp = ft_strjoin("/", var);
+		if (access(tmp, F_OK) == 0)
+		{
+			new_paths(x, tmp);
+			ft_memdel((void**)&tmp);
+			return (1);
+		}
+		
+	}
+	return (0);
 }
 
 /*
@@ -46,15 +57,7 @@ void				cd_mod(t_var *x)
 ** sea correcto pero en forma de introduccirse en carpetas.
 */
 
-// void				new_front(t_var *x, char *var)
-// {
-// 	if (!ft_strcmp(var, "-"))
-// 	{
-// 		trabajar aqui!!!!!!!
-// 	}
-// }
-
-int					front_path(t_var *x, char *var)
+int					front_path(t_var *x, char *var, int p)
 {
 	if (!ft_strcmp(var, "/"))
 	{
@@ -72,15 +75,13 @@ int					front_path(t_var *x, char *var)
 	if (access(x->f_tmp2, F_OK) == 0)
 	{
 		x->tmp_path = ft_strdup(x->f_tmp2);
-		ft_memdel((void**)&x->f_tmp);
-		ft_memdel((void**)&x->f_tmp2);
-		return (1);
+		p = 1;
 	}
-	// else
-	// 	new_front(x, var);
+	else
+		p = new_front(x, var);
 	ft_memdel((void**)&x->f_tmp);
 	ft_memdel((void**)&x->f_tmp2);
-	return (0);
+	return (p);
 }
 
 /*
@@ -119,6 +120,8 @@ int					back_path(t_var *x)
 
 void				bonus_cd(t_var *x)
 {
+
+	ft_memdel((void**)&x->cd_tmp);
 	ft_memdel((void**)&x->path);
 	x->path = ft_strdup(x->tmp_path);
 	cd_mod(x);
@@ -148,15 +151,14 @@ void				cd_access(t_var *x, char **var)
 		else if (!ft_strcmp("..", x->cd_tmp[x->i]))
 			x->flag = back_path(x);
 		else
-			x->flag = front_path(x, x->cd_tmp[x->i]);
+			x->flag = front_path(x, x->cd_tmp[x->i], 0);
 		if (x->flag == 0)
 		{
 			ft_printfcolor("cd: no such file or directory: %s\n",
-				x->cd_tmp[x->i], 34);
+				x->cd_tmp[x->i], 97);
 			ft_memdel((void**)&x->cd_tmp);
 			return ;
 		}
 	}
-	ft_memdel((void**)&x->cd_tmp);
 	bonus_cd(x);
 }

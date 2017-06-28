@@ -31,6 +31,7 @@ void				init_var(t_var *x)
 
 	x->path = (char *)malloc(sizeof(100));
 	x->path = ft_strdup(getcwd(NULL, 0));
+	x->oldpath = ft_strdup(x->path);
 	get_env(x);
 	tmp = x->head;
 	while (tmp)
@@ -61,7 +62,7 @@ void				getcommand(char **line, t_var *x)
 	else if (!ft_strcmp(comandos[0], "pwd"))
 		ft_printfcolor("%s\n", x->path, 39);
 	else if (!ft_strcmp(comandos[0], "cd"))
-		cd_access(x, comandos);
+		pre_cd(x, comandos);
 	else if (!ft_strcmp(comandos[0], "setenv"))
 		set_env(x, comandos);
 	else if (!ft_strcmp(comandos[0], "unsetenv"))
