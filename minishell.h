@@ -33,7 +33,9 @@ typedef	struct			s_var
 	char				*f_tmp;
 	char				*f_tmp2;
 	char				**cd_tmp;
+	char				*error;
 	int					flag;
+	int					no;
 	int					i;
 	int					z;
 	t_list				*head;
@@ -57,6 +59,11 @@ void					pre_cd(t_var *x, char **var);
 int						front_path(t_var *x, char *var, int p);
 int						back_path(t_var *x);
 int						command_cmp(t_var *x, char **var, int i, int j);
+int						cd_dash(t_var *x);
+int						cd_new_user_path(t_var *x, char **path);
+int						cd_usr(t_var *x, char **var);
 char					**matrix_list(t_var *x);
+char					**ft_split_whitespaces(char *str);
+char					*readline(void);
 
 #endif

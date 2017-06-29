@@ -23,19 +23,7 @@ int					new_front(t_var *x, char *var)
 	char 			*tmp;
 
 	if (!ft_strcmp(var, "-"))
-	{
-		tmp = ft_strdup(x->path);
-		ft_memdel((void**)&x->path);
-		x->path = ft_strdup(x->tmp_path);
-		ft_memdel((void**)&x->tmp_path);
-		x->tmp_path = ft_strdup(tmp);
-		ft_memdel((void**)&tmp);
-		/*
-			crear funcion para recuperar el path viejo
-		*/
-		printf("PATH: %s\nOLDPATH: %s\nTMPPATH: %s\n", x->path, x->oldpath, x->tmp_path);
-		return (1);
-	}
+		return (cd_dash(x));
 	else
 	{
 		tmp = ft_strjoin("/", var);
@@ -45,7 +33,6 @@ int					new_front(t_var *x, char *var)
 			ft_memdel((void**)&tmp);
 			return (1);
 		}
-		
 	}
 	return (0);
 }
@@ -124,6 +111,7 @@ void				bonus_cd(t_var *x)
 	ft_memdel((void**)&x->cd_tmp);
 	ft_memdel((void**)&x->path);
 	x->path = ft_strdup(x->tmp_path);
+	x->no = 0;
 	cd_mod(x);
 }
 
@@ -148,14 +136,15 @@ void				cd_access(t_var *x, char **var)
 	{
 		if (!ft_strcmp(".", x->cd_tmp[x->i]))
 			return ;
+		else if(var[1][0] == '~' && x->no == 0)
+			x->flag = cd_usr(x, var);
 		else if (!ft_strcmp("..", x->cd_tmp[x->i]))
 			x->flag = back_path(x);
 		else
 			x->flag = front_path(x, x->cd_tmp[x->i], 0);
 		if (x->flag == 0)
 		{
-			ft_printfcolor("cd: no such file or directory: %s\n",
-				x->cd_tmp[x->i], 97);
+			ft_printfcolor("%s %s\n", x->error, 39, x->cd_tmp[x->i], 97);
 			ft_memdel((void**)&x->cd_tmp);
 			return ;
 		}

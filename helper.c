@@ -12,11 +12,59 @@
 
 #include "minishell.h"
 
+int					cd_dash(t_var *x)
+{
+	t_list			*tmp2;
+	char			*oldpath;
+	char			*path;
+
+	tmp2 = x->head;
+	
+	while (tmp2)
+	{
+		if (!ft_strncmp("PWD=", tmp2->content, 4))
+			path = ft_strdup(ft_strchr(tmp2->content, '=') + 1);
+		else if (!ft_strncmp("OLDPWD=", tmp2->content, 7))
+			oldpath = ft_strdup(ft_strchr(tmp2->content, '=') + 1);
+		tmp2 = tmp2->next;
+	}
+	ft_memdel((void**)&x->path);
+	ft_memdel((void**)&x->oldpath);
+	ft_memdel((void**)&x->tmp_path);
+	x->path = ft_strdup(oldpath);
+	x->oldpath = ft_strdup(path);
+	x->tmp_path = ft_strdup(oldpath);
+	ft_memdel((void**)&path);
+	ft_memdel((void**)&oldpath);
+	return (1);
+}
+
+void				cd_pre_2(t_var *x, char **var, int i, char ***matrix)
+{
+	char			*tmp;
+	char			*final;
+
+	while (var[++i] && var[i + 1])
+	{
+		if (i > 1)
+		{
+			ft_memdel((void**)&tmp);
+			tmp = ft_strjoin(final, " ");
+		} 
+		else
+			tmp = ft_strjoin(var[i], " ");
+		if (i > 1)
+			ft_memdel((void**)&final);
+		final = ft_strjoin(tmp, var[i + 1]);
+	}
+	*matrix[1] = ft_strdup(final);
+	*matrix[2] = NULL;
+	cd_access(x, *matrix);
+}
+
 void				pre_cd(t_var *x, char **var)
 {
 	int				i;
-	char			*tmp;
-	char			*final;
 	char			**matrix;
 
 	i = 0;
@@ -25,25 +73,7 @@ void				pre_cd(t_var *x, char **var)
 	matrix = (char**)malloc(sizeof(char*) * 3);
 	matrix[0] = ft_strdup("cd");
 	if (i > 2)
-	{
-		i = 0;
-		while (var[++i] && var[i + 1])
-		{
-			if (i > 1)
-			{
-				ft_memdel((void**)&tmp);
-				tmp = ft_strjoin(final, " ");
-			} 
-			else
-				tmp = ft_strjoin(var[i], " ");
-			if (i > 1)
-				ft_memdel((void**)&final);
-			final = ft_strjoin(tmp, var[i + 1]);
-		}
-		matrix[1] = ft_strdup(final);
-		matrix[2] = NULL;
-		cd_access(x, matrix);
-	}
+		cd_pre_2(x, var, 0, &matrix);
 	else
 		cd_access(x, var);
 }
@@ -92,40 +122,4 @@ void			new_paths(t_var *x, char *var)
 	x->oldpath = ft_strdup(tmp);
 	x->tmp_path = ft_strdup(x->path);
 	ft_memdel((void**)&tmp);
-}
-
-/*
-** Matrix_list
-** ---------------------------------------------------------------------------
-** Esta funcion se encarga de crear una matriz doble con todos los datos que
-** contiene t_list head(contiene los env), y regresando la.
-*/
-
-char				**matrix_list(t_var *x)
-{
-	t_list			*tmp;
-	t_list			*tmp2;
-	char			**mat;
-	int				i;
-	int				j;
-
-	j = -1;
-	i = 0;
-	tmp = x->head;
-	while (tmp)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	free(tmp);
-	tmp2 = x->head;
-	mat = (char**)malloc(sizeof(char*) * i + 1);
-	while (tmp2)
-	{
-		mat[++j] = (char*)malloc(sizeof(char) * ft_strlen(tmp2->content) + 1);
-		mat[j] = ft_strdup(tmp2->content);
-		tmp2 = tmp2->next;
-	}
-	mat[j] = "\0";
-	return (mat);
 }

@@ -20,6 +20,42 @@ void				free_struct(t_var *x)
 }
 
 /*
+** Matrix_list
+** ---------------------------------------------------------------------------
+** Esta funcion se encarga de crear una matriz doble con todos los datos que
+** contiene t_list head(contiene los env), y regresando la.
+*/
+
+char				**matrix_list(t_var *x)
+{
+	t_list			*tmp;
+	t_list			*tmp2;
+	char			**mat;
+	int				i;
+	int				j;
+
+	j = -1;
+	i = 0;
+	tmp = x->head;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	free(tmp);
+	tmp2 = x->head;
+	mat = (char**)malloc(sizeof(char*) * i + 1);
+	while (tmp2)
+	{
+		mat[++j] = (char*)malloc(sizeof(char) * ft_strlen(tmp2->content) + 1);
+		mat[j] = ft_strdup(tmp2->content);
+		tmp2 = tmp2->next;
+	}
+	mat[j] = "\0";
+	return (mat);
+}
+
+/*
 ** Init_var
 ** ---------------------------------------------------------------------------
 ** Esta funcion inicializa las variables de la estructuras.
@@ -44,6 +80,8 @@ void				init_var(t_var *x)
 	free(tmp);
 	x->flag = 1;
 	x->z = 0;
+	x->no = 0;
+	x->error = ft_strdup("cd: no such file or directory:");
 }
 
 /*
@@ -56,7 +94,7 @@ void				getcommand(char **line, t_var *x)
 {
 	char			**comandos;
 
-	comandos = ft_strsplit(*line, ' ');
+	comandos = ft_split_whitespaces(*line);
 	if (!ft_strcmp(comandos[0], "echo"))
 		choose_echo(1, comandos, x);
 	else if (!ft_strcmp(comandos[0], "pwd"))
@@ -97,9 +135,10 @@ int					main(int ac, char **av)
 	while (1)
 	{
 		ft_printfcolor("%s%s%s ", "@", 36, x->name, 36, "$>", 36);
-		get_next_line(0, &line);
+		line = readline();
 		if (!ft_strcmp(line, "exit"))
 		{
+			ft_memdel((void**)&line);
 			free_struct(x);
 			exit(3);
 		}
@@ -109,5 +148,6 @@ int					main(int ac, char **av)
 	ft_memdel((void**)&line);
 	ft_memdel((void**)&x);
 	ft_memdel((void**)&fake);
+	ft_memdel((void**)&x->error);
 	return (ac);
 }
