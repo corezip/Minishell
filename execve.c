@@ -88,8 +88,10 @@ int				command_cmp(t_var *x, char **var, int i, int j)
 					return (1);
 				}
 			}
+			ft_memdel((void**)&path_mat);
 		}
 	}
+	ft_memdel((void**)&matrix);
 	return (0);
 }
 
@@ -103,6 +105,7 @@ void			slash_found(char **var, t_var *x, int i)
 {
 	char		**tmp;
 	int			z;
+
 	z = 1;
 	while (var[i])
 		i++;

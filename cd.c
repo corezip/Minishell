@@ -67,3 +67,22 @@ char				*readline(void)
 	line = ft_strsub(buffsazo, 0, ft_strlen(buffsazo));
 	return (line);
 }
+
+/*
+** New_paths
+** ---------------------------------------------------------------------------
+** Tipo ft_swap pero con matrices.
+*/
+
+void				new_paths(t_var *x, char *var)
+{
+	char			*tmp;
+
+	tmp = ft_strdup(x->path);
+	ft_memdel((void**)&x->path);
+	x->path = ft_strdup(var);
+	ft_memdel((void**)&x->oldpath);
+	x->oldpath = ft_strdup(tmp);
+	x->tmp_path = ft_strdup(x->path);
+	ft_memdel((void**)&tmp);
+}

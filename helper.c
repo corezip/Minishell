@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+int					num_list(t_var *x)
+{
+	int				i;
+	t_list			*tmp;
+
+	i = 0;
+	tmp = x->head;
+	while (tmp)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	free(tmp);
+	return (i);
+}
+
 int					cd_dash(t_var *x)
 {
 	t_list			*tmp2;
@@ -19,7 +35,6 @@ int					cd_dash(t_var *x)
 	char			*path;
 
 	tmp2 = x->head;
-	
 	while (tmp2)
 	{
 		if (!ft_strncmp("PWD=", tmp2->content, 4))
@@ -50,7 +65,7 @@ void				cd_pre_2(t_var *x, char **var, int i, char ***matrix)
 		{
 			ft_memdel((void**)&tmp);
 			tmp = ft_strjoin(final, " ");
-		} 
+		}
 		else
 			tmp = ft_strjoin(var[i], " ");
 		if (i > 1)
@@ -103,23 +118,4 @@ void				cd_mod(t_var *x)
 	}
 	else
 		ft_printfcolor("Error chdir\n");
-}
-
-/*
-** New_paths
-** ---------------------------------------------------------------------------
-** Tipo ft_swap pero con matrices.
-*/
-
-void			new_paths(t_var *x, char *var)
-{
-	char		*tmp;
-
-	tmp = ft_strdup(x->path);
-	ft_memdel((void**)&x->path);
-	x->path = ft_strdup(var);
-	ft_memdel((void**)&x->oldpath);
-	x->oldpath = ft_strdup(tmp);
-	x->tmp_path = ft_strdup(x->path);
-	ft_memdel((void**)&tmp);
 }

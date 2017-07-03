@@ -20,7 +20,7 @@
 
 int					new_front(t_var *x, char *var)
 {
-	char 			*tmp;
+	char			*tmp;
 
 	if (!ft_strcmp(var, "-"))
 		return (cd_dash(x));
@@ -107,7 +107,6 @@ int					back_path(t_var *x)
 
 void				bonus_cd(t_var *x)
 {
-
 	ft_memdel((void**)&x->cd_tmp);
 	ft_memdel((void**)&x->path);
 	x->path = ft_strdup(x->tmp_path);
@@ -136,7 +135,7 @@ void				cd_access(t_var *x, char **var)
 	{
 		if (!ft_strcmp(".", x->cd_tmp[x->i]))
 			return ;
-		else if(var[1][0] == '~' && x->no == 0)
+		else if (var[1][0] == '~' && x->no == 0)
 			x->flag = cd_usr(x, var);
 		else if (!ft_strcmp("..", x->cd_tmp[x->i]))
 			x->flag = back_path(x);

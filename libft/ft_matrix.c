@@ -17,6 +17,6 @@ void	ft_matrix(char **matrix)
 	int	i;
 
 	i = -1;
-	while(matrix[++i])
+	while (matrix[++i])
 		ft_printf("%s\n", matrix[i]);
 }

@@ -29,28 +29,22 @@ void				free_struct(t_var *x)
 char				**matrix_list(t_var *x)
 {
 	t_list			*tmp;
-	t_list			*tmp2;
 	char			**mat;
 	int				i;
 	int				j;
 
 	j = -1;
-	i = 0;
+	i = num_list(x);
 	tmp = x->head;
+	mat = (char**)malloc(sizeof(char*) * i + 1);
 	while (tmp)
 	{
+		mat[++j] = (char*)malloc(sizeof(char) * ft_strlen(tmp->content) + 1);
+		mat[j] = ft_strdup(tmp->content);
 		tmp = tmp->next;
-		i++;
 	}
+	j++;
 	free(tmp);
-	tmp2 = x->head;
-	mat = (char**)malloc(sizeof(char*) * i + 1);
-	while (tmp2)
-	{
-		mat[++j] = (char*)malloc(sizeof(char) * ft_strlen(tmp2->content) + 1);
-		mat[j] = ft_strdup(tmp2->content);
-		tmp2 = tmp2->next;
-	}
 	mat[j] = "\0";
 	return (mat);
 }
@@ -105,8 +99,7 @@ void				getcommand(char **line, t_var *x)
 		set_env(x, comandos);
 	else if (!ft_strcmp(comandos[0], "unsetenv"))
 		del_env(x, comandos[1]);
-	else if (!ft_strcmp(comandos[0], "env") ||
-		!ft_strcmp("/usr/bin/env", comandos[0]))
+	else if (!ft_strcmp(comandos[0], "env"))
 		print_env(x);
 	else if (comandos[0][0] == '/')
 		slash_found(comandos, x, 0);

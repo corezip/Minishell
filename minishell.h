@@ -62,6 +62,7 @@ int						command_cmp(t_var *x, char **var, int i, int j);
 int						cd_dash(t_var *x);
 int						cd_new_user_path(t_var *x, char **path);
 int						cd_usr(t_var *x, char **var);
+int						num_list(t_var *x);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);
