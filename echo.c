@@ -25,6 +25,8 @@ void				print_echo(int j, char *comandos)
 	flag = 0;
 	while (comandos[++j])
 	{
+		if (comandos[j] == '"')
+			j++;
 		if (comandos[j] == '\\' && comandos[j + 1] == 'n')
 		{
 			write(1, "\n", 1);

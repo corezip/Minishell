@@ -142,7 +142,7 @@ void				cd_access(t_var *x, char **var)
 			x->flag = back_path(x);
 		else
 			x->flag = front_path(x, x->cd_tmp[x->i], 0);
-		if (x->flag == 0)
+		if (x->flag == 0 && x->no == 0)
 		{
 			ft_printfcolor("%s %s\n", x->error, 39, x->cd_tmp[x->i], 97);
 			ft_memdel((void**)&x->cd_tmp);

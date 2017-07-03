@@ -106,7 +106,7 @@ void				getcommand(char **line, t_var *x)
 	else if (!ft_strcmp(comandos[0], "unsetenv"))
 		del_env(x, comandos[1]);
 	else if (!ft_strcmp(comandos[0], "env") ||
-		!ft_strcmp("/user/bin/env", comandos[0]))
+		!ft_strcmp("/usr/bin/env", comandos[0]))
 		print_env(x);
 	else if (comandos[0][0] == '/')
 		slash_found(comandos, x, 0);

@@ -16,13 +16,13 @@ int					cd_new_user_path(t_var *x, char **path)
 {
 	if (access(*path, F_OK) == 0)
 	{
+		printf("%s\n", *path);
 		x->oldpath = ft_strdup(x->path);
 		ft_memdel((void**)&x->path);
 		x->path = ft_strdup(*path);
 		ft_memdel((void**)&*path);
 		x->tmp_path = ft_strdup(x->path);
 		x->no = 1;
-		x->i++;
 		return (1);
 	}
 	ft_memdel((void**)&path);
