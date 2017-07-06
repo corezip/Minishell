@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+int				cd_error(t_var *x)
+{
+	if (x->flag == 0 && x->no == 0)
+	{
+		ft_printfcolor("%s %s\n", x->error, 39, x->cd_tmp[x->i], 97);
+		ft_memdel((void**)&x->cd_tmp);
+		return (1);
+	}
+	return (0);
+}
+
 int					cd_new_user_path(t_var *x, char **path)
 {
 	if (access(*path, F_OK) == 0)

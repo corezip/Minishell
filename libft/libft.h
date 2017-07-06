@@ -242,5 +242,6 @@ void				set_color(int c);
 void				ft_lstaddback(t_list **alst, t_list *new);
 void				ft_lstdeletenode(t_list *e, int nb);
 void				ft_matrix(char **matrix);
+void				ft_delmat(char ***matrix);
 
 #endif

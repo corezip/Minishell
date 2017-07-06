@@ -21,12 +21,16 @@
 void				print_env(t_var *x)
 {
 	t_list *tmp;
+	char	*j;
+	int		i = 0;
 
 	tmp = x->head;
 	while (tmp)
 	{
+		j = tmp->content;
 		ft_printfcolor("%s\n", tmp->content, 39);
 		tmp = tmp->next;
+		i++;
 	}
 	free(tmp);
 }
@@ -53,6 +57,7 @@ void				del_env(t_var *x, char *str)
 		tmp = tmp->next;
 		i++;
 	}
+	ft_memdel((void**)&comp);
 	free(tmp);
 }
 
@@ -112,6 +117,6 @@ void				set_env(t_var *x, char **str)
 		var = ft_strsplit(str[1], '=');
 		if (var[0] && var[1])
 			add_env(x, var);
-		ft_memdel((void**)&var);
+		memdelmat(var);
 	}
 }

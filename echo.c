@@ -52,6 +52,8 @@ void				print_echo(int j, char *comandos)
 void				choose_echo(int i, char **var, t_var *x)
 {
 	t_list			*tmp;
+	char			*join;
+	char			*join2;
 
 	tmp = x->head;
 	while (var[i])
@@ -60,10 +62,13 @@ void				choose_echo(int i, char **var, t_var *x)
 		{
 			while (tmp)
 			{
-				if (!ft_strncmp(ft_strjoin("$", tmp->content),
-					ft_strjoin(var[i], "="), ft_strlen(var[i] + 1)))
+				join = ft_strjoin("$", tmp->content);
+				join2 = ft_strjoin(var[i], "=");
+				if (!ft_strncmp(join, join2, ft_strlen(var[i] + 1)))
 					ft_printfcolor("%s ", ft_strchr(tmp->content, '=') + 1, 31);
 				tmp = tmp->next;
+				ft_memdel((void**)&join);
+				ft_memdel((void**)&join2);
 			}
 		}
 		else

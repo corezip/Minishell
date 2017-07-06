@@ -27,6 +27,7 @@ typedef	struct			s_var
 	char				*tmp_path;
 	char				*oldpath;
 	char				*path_back;
+	char				*original_path;
 	char				*name;
 	char				**command;
 	char				**dir;
@@ -56,6 +57,8 @@ void					cd_mod(t_var *x);
 void					slash_found(char **var, t_var *x, int i);
 void					new_paths(t_var *x, char *var);
 void					pre_cd(t_var *x, char **var);
+void					memdelmat(char **comandos);
+int						cd_error(t_var *x);
 int						front_path(t_var *x, char *var, int p);
 int						back_path(t_var *x);
 int						command_cmp(t_var *x, char **var, int i, int j);
@@ -66,5 +69,6 @@ int						num_list(t_var *x);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);
+void					access_cd_2(t_var *x, char **var);
 
 #endif

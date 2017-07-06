@@ -84,9 +84,19 @@ void				init_var(t_var *x)
 ** Esta funcion separa el comando introducido para su seleccion de proceso.
 */
 
+void				memdelmat(char **comandos)
+{
+	int i = -1;
+
+	while (comandos[++i])
+	{
+		ft_memdel((void**)&comandos[i]);
+	}
+}
 void				getcommand(char **line, t_var *x)
 {
 	char			**comandos;
+	int i = -1;
 
 	comandos = ft_split_whitespaces(*line);
 	if (!ft_strcmp(comandos[0], "echo"))
@@ -107,7 +117,7 @@ void				getcommand(char **line, t_var *x)
 		x->z = 0;
 	else
 		ft_printfcolor("zsh: command not found: %s\n", comandos[0], 97);
-	ft_memdel((void**)&comandos);
+	memdelmat(comandos);
 }
 
 /*
@@ -120,27 +130,24 @@ int					main(int ac, char **av)
 {
 	char			*line;
 	t_var			*x;
-	char			**fake;
 
 	x = (t_var *)malloc(sizeof(t_var));
 	init_var(x);
-	fake = ft_strsplit(av[0], '/');
 	while (1)
 	{
 		ft_printfcolor("%s%s%s ", "@", 36, x->name, 36, "$>", 36);
 		line = readline();
 		if (!ft_strcmp(line, "exit"))
 		{
-			ft_memdel((void**)&line);
 			free_struct(x);
-			exit(3);
+			break ;
 		}
 		if (ft_strlen(line))
 			getcommand(&line, x);
 	}
 	ft_memdel((void**)&line);
+	ft_memdel((void**)&x->name);
+	ft_memdel((void**)&x->path);
 	ft_memdel((void**)&x);
-	ft_memdel((void**)&fake);
-	ft_memdel((void**)&x->error);
 	return (ac);
 }

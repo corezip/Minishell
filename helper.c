@@ -91,6 +91,7 @@ void				pre_cd(t_var *x, char **var)
 		cd_pre_2(x, var, 0, &matrix);
 	else
 		cd_access(x, var);
+	memdelmat(matrix);
 }
 
 /*
@@ -99,23 +100,23 @@ void				pre_cd(t_var *x, char **var)
 ** Se encarga de hacer los cambios en los path(nuevo y viejo).
 */
 
-void				cd_mod(t_var *x)
-{
-	char			*tmp;
+// void				cd_mod(t_var *x)
+// {
+// 	char			*tmp;
 
-	if (chdir(x->path) == 0)
-	{
-		del_env(x, "PWD");
-		tmp = ft_strjoin("PWD=", x->path);
-		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-		ft_lstaddback(&x->head, x->tmp);
-		ft_memdel((void**)&tmp);
-		del_env(x, "OLDPWD");
-		tmp = ft_strjoin("OLDPWD=", x->oldpath);
-		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-		ft_lstaddback(&x->head, x->tmp);
-		ft_memdel((void**)&tmp);
-	}
-	else
-		ft_printfcolor("Error chdir\n");
-}
+// 	if (chdir(x->path) == 0)
+// 	{
+// 		del_env(x, "PWD");
+// 		tmp = ft_strjoin("PWD=", x->path);
+// 		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
+// 		ft_lstaddback(&x->head, x->tmp);
+// 		ft_memdel((void**)&tmp);
+// 		del_env(x, "OLDPWD");
+// 		tmp = ft_strjoin("OLDPWD=", x->oldpath);
+// 		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
+// 		ft_lstaddback(&x->head, x->tmp);
+// 		ft_memdel((void**)&tmp);
+// 	}
+// 	else
+// 		ft_printfcolor("Error chdir\n");
+// }

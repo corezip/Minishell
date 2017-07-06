@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnew.c                                        :+:      :+:    :+:   */
+/*   ft_delmat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsolis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: gsolis <gsolis@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/01/11 15:40:16 by gsolis            #+#    #+#             */
-/*   Updated: 2017/01/11 15:40:17 by gsolis           ###   ########.fr       */
+/*   Created: 2017/07/05 11:28:57 by gsolis            #+#    #+#             */
+/*   Updated: 2017/07/05 11:28:59 by gsolis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strnew(size_t size)
+void			ft_delmat(char ***matrix)
 {
-	char *str;
+	int i;
 
-	if (!(str = (char *)ft_memalloc(size + 1)))
-		return (NULL);
-	return (str);
+	i = -1;
+	while (*matrix[++i])
+	{
+		printf("%s\n", *matrix[i]);
+		ft_memdel((void**)&*matrix[i]);
+	}
 }
