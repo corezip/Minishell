@@ -23,11 +23,10 @@
 
 typedef	struct			s_var
 {
-	char				*path;
-	char				*tmp_path;
-	char				*oldpath;
-	char				*path_back;
-	char				*original_path;
+	char				*path; //Path en el que nos encontramos
+	char				*tmp_path; //path temporal donde guardaremos el path donde nos econtramos para despues pasarlo al oldpath 
+	char				*oldpath; //Path donde donde nos encotramos la vez pasada de usar cd
+	char				*original_path; // Path de seguridad por si al usar cd falla la carpeta donde estamos.
 	char				*name;
 	char				**command;
 	char				**dir;
@@ -52,23 +51,17 @@ void					print_env(t_var *x);
 void					command_ls(t_var *x, char **var);
 void					del_env(t_var *x, char *str);
 void					choose_echo(int i, char **var, t_var *x);
-void					cd_access(t_var *x, char **var);
 void					cd_mod(t_var *x);
 void					slash_found(char **var, t_var *x, int i);
-void					new_paths(t_var *x, char *var);
-void					pre_cd(t_var *x, char **var);
 void					memdelmat(char **comandos);
-int						cd_error(t_var *x);
-int						front_path(t_var *x, char *var, int p);
-int						back_path(t_var *x);
-int						command_cmp(t_var *x, char **var, int i, int j);
-int						cd_dash(t_var *x);
-int						cd_new_user_path(t_var *x, char **path);
-int						cd_usr(t_var *x, char **var);
-int						num_list(t_var *x);
+void					access_cd_2(t_var *x, char **var, int i);
+void					new_old_path(t_var *x, char *tmp);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);
-void					access_cd_2(t_var *x, char **var);
+int						cd_error(t_var *x, char *line);
+int						command_cmp(t_var *x, char **var, int i, int j);
+int						num_list(t_var *x);
+int						front_cd(t_var *x, char *var, int p);
 
 #endif

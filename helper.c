@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+/*
+** ---------------------------------------------------------------------------
+*/
+
 int					num_list(t_var *x)
 {
 	int				i;
@@ -28,71 +32,26 @@ int					num_list(t_var *x)
 	return (i);
 }
 
-int					cd_dash(t_var *x)
-{
-	t_list			*tmp2;
-	char			*oldpath;
-	char			*path;
+/*
+** ---------------------------------------------------------------------------
+*/
 
-	tmp2 = x->head;
-	while (tmp2)
+char				*readline(void)
+{
+	char			buffsazo[1025];
+	int				ret;
+	char			*line;
+
+	ret = read(0, buffsazo, 1024);
+	if (ret == 0)
 	{
-		if (!ft_strncmp("PWD=", tmp2->content, 4))
-			path = ft_strdup(ft_strchr(tmp2->content, '=') + 1);
-		else if (!ft_strncmp("OLDPWD=", tmp2->content, 7))
-			oldpath = ft_strdup(ft_strchr(tmp2->content, '=') + 1);
-		tmp2 = tmp2->next;
+		line = ft_strdup("exit");
+		return (line);
 	}
-	ft_memdel((void**)&x->path);
-	ft_memdel((void**)&x->oldpath);
-	ft_memdel((void**)&x->tmp_path);
-	x->path = ft_strdup(oldpath);
-	x->oldpath = ft_strdup(path);
-	x->tmp_path = ft_strdup(oldpath);
-	ft_memdel((void**)&path);
-	ft_memdel((void**)&oldpath);
-	return (1);
-}
-
-void				cd_pre_2(t_var *x, char **var, int i, char ***matrix)
-{
-	char			*tmp;
-	char			*final;
-
-	while (var[++i] && var[i + 1])
-	{
-		if (i > 1)
-		{
-			ft_memdel((void**)&tmp);
-			tmp = ft_strjoin(final, " ");
-		}
-		else
-			tmp = ft_strjoin(var[i], " ");
-		if (i > 1)
-			ft_memdel((void**)&final);
-		final = ft_strjoin(tmp, var[i + 1]);
-	}
-	*matrix[1] = ft_strdup(final);
-	*matrix[2] = NULL;
-	cd_access(x, *matrix);
-}
-
-void				pre_cd(t_var *x, char **var)
-{
-	int				i;
-	char			**matrix;
-
-	i = 0;
-	while (var[i])
-		i++;
-	matrix = (char**)malloc(sizeof(char*) * 3);
-	matrix[0] = ft_strdup("cd");
-	if (i > 2)
-		cd_pre_2(x, var, 0, &matrix);
-	else
-		cd_access(x, var);
-	memdelmat(matrix);
-}
+	buffsazo[ret - 1] = '\0';
+	line = ft_strsub(buffsazo, 0, ft_strlen(buffsazo));
+	return (line);
+} 
 
 /*
 ** Cd_mod
@@ -100,23 +59,26 @@ void				pre_cd(t_var *x, char **var)
 ** Se encarga de hacer los cambios en los path(nuevo y viejo).
 */
 
-// void				cd_mod(t_var *x)
-// {
-// 	char			*tmp;
+void				cd_mod(t_var *x)
+{
 
-// 	if (chdir(x->path) == 0)
-// 	{
-// 		del_env(x, "PWD");
-// 		tmp = ft_strjoin("PWD=", x->path);
-// 		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-// 		ft_lstaddback(&x->head, x->tmp);
-// 		ft_memdel((void**)&tmp);
-// 		del_env(x, "OLDPWD");
-// 		tmp = ft_strjoin("OLDPWD=", x->oldpath);
-// 		x->tmp = ft_lstnew(tmp, ft_strlen(tmp) + 1);
-// 		ft_lstaddback(&x->head, x->tmp);
-// 		ft_memdel((void**)&tmp);
-// 	}
-// 	else
-// 		ft_printfcolor("Error chdir\n");
-// }
+	char			*tmp;
+	char			*tmp2;
+	t_list			*new;
+
+	if (chdir(x->path) == 0)
+	{
+		del_env(x, "PWD");
+		tmp = ft_strjoin("PWD=", x->path);
+		new = ft_lstnew(tmp, ft_strlen(tmp) + 1);
+		ft_lstaddback(&x->head, new);
+		ft_memdel((void**)&tmp);
+		del_env(x, "OLDPWD");
+		tmp2 = ft_strjoin("OLDPWD=", x->oldpath);
+		new = ft_lstnew(tmp2, ft_strlen(tmp2) + 1);
+		ft_lstaddback(&x->head, new);
+		ft_memdel((void**)&tmp2);
+	}
+	else
+		ft_printfcolor("Error chdir\n");
+}

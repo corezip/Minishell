@@ -53,12 +53,16 @@ void				del_env(t_var *x, char *str)
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->content, comp, ft_strlen(str + 1)))
+		{
+			ft_memdel((void**)&tmp->content);
 			ft_lstdeletenode(x->head, i);
+			tmp = tmp->next;
+			break ;
+		}
 		tmp = tmp->next;
 		i++;
 	}
 	ft_memdel((void**)&comp);
-	free(tmp);
 }
 
 /*
@@ -70,14 +74,15 @@ void				del_env(t_var *x, char *str)
 void				get_env(t_var *x)
 {
 	extern char		**environ;
+	t_list			*tmp;
 	int				i;
 
 	i = -1;
 	x->head = NULL;
 	while (environ[++i])
 	{
-		x->tmp = ft_lstnew(environ[i], ft_strlen(environ[i]) + 1);
-		ft_lstaddback(&x->head, x->tmp);
+		tmp = ft_lstnew(environ[i], ft_strlen(environ[i]) + 1);
+		ft_lstaddback(&x->head, tmp);
 	}
 }
 
@@ -91,11 +96,12 @@ void				add_env(t_var *x, char **var)
 {
 	char			*tmp;
 	char			*tmp2;
+	t_list			*new;
 
 	tmp = ft_strjoin(var[0], "=");
 	tmp2 = ft_strjoin(tmp, var[1]);
-	x->tmp = ft_lstnew(tmp2, ft_strlen(tmp2) + 1);
-	ft_lstaddback(&x->head, x->tmp);
+	new = ft_lstnew(tmp2, ft_strlen(tmp2) + 1);
+	ft_lstaddback(&x->head, new);
 	ft_memdel((void**)&tmp);
 	ft_memdel((void**)&tmp2);
 }

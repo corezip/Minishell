@@ -14,9 +14,10 @@
 
 void				free_struct(t_var *x)
 {
+	ft_memdel((void**)&x->name);
 	ft_memdel((void**)&x->path);
 	ft_lstdel(&x->head, ft_bzero);
-	ft_memdel((void**)&x->name);
+	ft_memdel((void**)&x);
 }
 
 /*
@@ -58,9 +59,12 @@ char				**matrix_list(t_var *x)
 void				init_var(t_var *x)
 {
 	t_list			*tmp;
+	char			*path;
 
+	path = getcwd(NULL, 0);
 	x->path = (char *)malloc(sizeof(100));
-	x->path = ft_strdup(getcwd(NULL, 0));
+	x->path = ft_strdup(path);
+	ft_memdel((void**)&path);
 	x->oldpath = ft_strdup(x->path);
 	get_env(x);
 	tmp = x->head;
@@ -86,8 +90,9 @@ void				init_var(t_var *x)
 
 void				memdelmat(char **comandos)
 {
-	int i = -1;
+	int i;
 
+	i = -1;
 	while (comandos[++i])
 	{
 		ft_memdel((void**)&comandos[i]);
@@ -104,7 +109,7 @@ void				getcommand(char **line, t_var *x)
 	else if (!ft_strcmp(comandos[0], "pwd"))
 		ft_printfcolor("%s\n", x->path, 39);
 	else if (!ft_strcmp(comandos[0], "cd"))
-		pre_cd(x, comandos);
+		access_cd_2(x, comandos, -1);
 	else if (!ft_strcmp(comandos[0], "setenv"))
 		set_env(x, comandos);
 	else if (!ft_strcmp(comandos[0], "unsetenv"))
@@ -132,22 +137,23 @@ int					main(int ac, char **av)
 	t_var			*x;
 
 	x = (t_var *)malloc(sizeof(t_var));
+	line = NULL;
 	init_var(x);
 	while (1)
 	{
 		ft_printfcolor("%s%s%s ", "@", 36, x->name, 36, "$>", 36);
+		if (line)
+			ft_memdel((void**)&line);
 		line = readline();
 		if (!ft_strcmp(line, "exit"))
 		{
 			free_struct(x);
-			break ;
+			return (0);
 		}
 		if (ft_strlen(line))
 			getcommand(&line, x);
 	}
 	ft_memdel((void**)&line);
-	ft_memdel((void**)&x->name);
-	ft_memdel((void**)&x->path);
-	ft_memdel((void**)&x);
+	free_struct(x);
 	return (ac);
 }

@@ -13,139 +13,117 @@
 #include "minishell.h"
 
 /*
-** Nwe_front
 ** ---------------------------------------------------------------------------
-** Se encarga de verificar que el path sea "/" junto con algo mas.
 */
 
-int					new_front(t_var *x, char *var)
+int					back_cd(t_var *x)
 {
 	char			*tmp;
 
-	if (!ft_strcmp(var, "-"))
-		return (cd_dash(x));
-	else
-	{
-		tmp = ft_strjoin("/", var);
-		if (access(tmp, F_OK) == 0)
-		{
-			new_paths(x, tmp);
-			ft_memdel((void**)&tmp);
-			return (1);
-		}
-	}
-	return (0);
-}
-
-/*
-** Front_path
-** ---------------------------------------------------------------------------
-** Se encarga de verificar que el pedazo de path al que se trata de llegar
-** sea correcto pero en forma de introduccirse en carpetas.
-*/
-
-int					front_path(t_var *x, char *var, int p)
-{
-	if (!ft_strcmp(var, "/"))
-	{
-		x->f_tmp = ft_strdup("/");
-		x->f_tmp2 = ft_strdup("/");
-	}
-	else
-	{
-		if (!ft_strcmp(x->path, "/"))
-			x->f_tmp = ft_strdup("/");
-		else
-			x->f_tmp = ft_strjoin(x->path, "/");
-		x->f_tmp2 = ft_strjoin(x->f_tmp, var);
-	}
-	if (access(x->f_tmp2, F_OK) == 0)
-	{
-		x->tmp_path = ft_strdup(x->f_tmp2);
-		p = 1;
-	}
-	else
-		p = new_front(x, var);
-	ft_memdel((void**)&x->f_tmp);
-	ft_memdel((void**)&x->f_tmp2);
-	return (p);
-}
-
-/*
-** Back_path
-** ---------------------------------------------------------------------------
-** Se encarga de verificar que el pedazo de path al que se trata de llegar
-** sea correcto pero en forma de salirse en carpetas.
-*/
-
-int					back_path(t_var *x)
-{
-	char			*tmp;
-
-	tmp = ft_strsub(x->path_back, 0, ft_strlen(x->path_back) -
-	ft_strlen(ft_strrchr(x->path_back, '/')));
+	tmp = ft_strsub(x->path, 0, ft_strlen(x->path) -
+	ft_strlen(ft_strrchr(x->path, '/')));
 	if (ft_strlen(tmp) <= 0)
 		tmp = ft_strdup("/");
 	if (access(tmp, F_OK) == 0)
 	{
-		ft_memdel((void**)&x->path_back);
-		x->tmp_path = ft_strdup(tmp);
-		x->path_back = ft_strdup(tmp);
+		new_old_path(x, tmp);
 		ft_memdel((void**)&tmp);
 		return (1);
 	}
-	else
-		ft_memdel((void**)&tmp);
+	ft_memdel((void**)&tmp);
 	return (0);
 }
 
 /*
-** Bonus_cd
 ** ---------------------------------------------------------------------------
-** Funcion que se utiliza para liberar un poco de lineas de la funcion
-** cd_access.
 */
 
-void				bonus_cd(t_var *x)
+int					cd_dash(t_var *x)
 {
-	memdelmat(x->cd_tmp);
-	ft_memdel((void**)&x->path);
-	ft_memdel((void**)&x->path_back);
-	x->path = ft_strdup(x->tmp_path);
-	x->no = 0;
-	cd_mod(x);
+	char			*tmp;
+	t_list			*new;
+
+	new = x->head;
+	while (new)
+	{
+		if (!ft_strncmp("OLDPWD=", new->content, 7))
+			tmp = ft_strsub(new->content, 7, ft_strlen(
+				ft_strchr(new->content, '=')));
+		new = new->next;
+	}
+	new_old_path(x, tmp);
+	ft_memdel((void**)&tmp);
+	free(new);
+	return (1);
 }
 
 /*
-** Cd_access
 ** ---------------------------------------------------------------------------
-** Se encarga de obtener cada parte del path al que se quiere llegar, y
-** mandando a las 2 funciones responsables de ir avanzando o retrocediendo en
-** las carpetas.
 */
 
-void				cd_access(t_var *x, char **var)
+int				home_cd(t_var *x)
 {
-	x->i = -1;
-	ft_memdel((void**)&x->oldpath);
-	x->oldpath = ft_strdup(x->path);
-	x->path_back = ft_strdup(x->path);
-	if (!ft_strcmp(var[1], "/"))
-		x->cd_tmp = ft_strsplit(var[1], '-');
-	else
-		x->cd_tmp = ft_strsplit(var[1], '/');
-	while (x->cd_tmp[++x->i])
+	t_list		*new;
+	char		*tmp;
+
+	new = x->head;
+	while (new)
 	{
-		if (!ft_strcmp(".", x->cd_tmp[x->i]))
-			return ;
-		else if (var[1][0] == '~' && x->no == 0)
-			x->flag = cd_usr(x, var);
-		else if (!ft_strcmp("..", x->cd_tmp[x->i]))
-			x->flag = back_path(x);
-		else
-			x->flag = front_path(x, x->cd_tmp[x->i], 0);
-		if (cd_error(x) == 1)
-			return ;
+		if (!ft_strncmp("HOME=", new->content, 5))
+			tmp = ft_strsub(new->content, 5, ft_strlen(
+				ft_strchr(new->content, '=')));
+		new = new->next;
 	}
-	bonus_cd(x);
+	new_old_path(x, tmp);
+	ft_memdel((void**)&tmp);
+	free(new);
+	return (1);
+}
+
+/*
+** ---------------------------------------------------------------------------
+*/
+
+int				slash_cd_2(t_var *x, char **var)
+{
+	if (ft_strlen(var[1]) == 1)
+		new_old_path(x, "/");
+	else if (access(var[1], F_OK) == 0)
+	{
+		new_old_path(x, var[1]);
+		return (1);
+	}
+	return (0);
+}
+
+/*
+** ---------------------------------------------------------------------------
+*/
+
+void			access_cd_2(t_var *x, char **var, int i)
+{
+	char		**matrix;
+
+	matrix = ft_strsplit(var[1], '/');
+	x->original_path = ft_strdup(x->path);
+	if (var[1][0] == '/')
+			slash_cd_2(x, var);
+	while (matrix[++i] && x->flag == 1)
+	{
+		if (!ft_strcmp(".", matrix[i]))
+			return ;
+		else if (!ft_strcmp("..", matrix[i]))
+			x->flag = back_cd(x); 
+		else if (!ft_strcmp("~", matrix[i]))
+			x->flag = home_cd(x);
+		else if (!ft_strcmp("-", var[1]))
+			x->flag = cd_dash(x); 
+		else
+			x->flag = front_cd(x, matrix[i], 0);
+		if (cd_error(x, matrix[i]) == 1)
+			break ;
+	}
+	memdelmat(matrix);
+	cd_mod(x);
+	ft_memdel((void**)&x->original_path);
 }
