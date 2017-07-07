@@ -39,13 +39,18 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 		if ((pid = fork()) == 0)
 		{
 			execve(tmp2, var, matrix);
-			ft_memdel((void**)&tmp2);
+			memdelmat(matrix);
 			ft_memdel((void**)&matrix);
+			ft_memdel((void**)&tmp2);
 			return (1);
 		}
 		else if (pid > 0)
 			pid = wait(0);
 	}
+	memdelmat(matrix);
+	ft_memdel((void**)&matrix);
+	ft_memdel((void**)&tmp);
+	ft_memdel((void**)&tmp2);
 	return (0);
 }
 
@@ -73,24 +78,30 @@ int				command_cmp(t_var *x, char **var, int i, int j)
 	int			z;
 
 	matrix = matrix_list(x);
+	// z = -1;
+	// while (matrix[++i])
+	// {
+	// 	if (!ft_strncmp("PATH=", matrix[i], 5))
+	// 	{
+	// 		path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
+	// 		while (path_mat[++j])
+	// 		{
+	// 			if (print_command(x, path_mat[j], var[0], var) == 1)
+	// 			{
+	// 				memdelmat(matrix);
+	// 				memdelmat(path_mat);
+	// 				ft_memdel((void**)&matrix);
+	// 				ft_memdel((void**)&path_mat);
+	// 				return (1);
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// memdelmat(path_mat);
+	// ft_memdel((void**)&path_mat);
 	z = -1;
-	while (matrix[++i])
-	{
-		if (!ft_strncmp("PATH=", matrix[i], 5))
-		{
-			path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
-			while (path_mat[++j])
-			{
-				if (print_command(x, path_mat[j], var[0], var) == 1)
-				{
-					ft_memdel((void**)&matrix);
-					ft_memdel((void**)&path_mat);
-					return (1);
-				}
-			}
-			ft_memdel((void**)&path_mat);
-		}
-	}
+	while (matrix[++z])
+		ft_memdel((void**)&matrix[z]);
 	ft_memdel((void**)&matrix);
 	return (0);
 }
@@ -109,7 +120,7 @@ void			slash_found(char **var, t_var *x, int i)
 	z = 1;
 	while (var[i])
 		i++;
-	tmp = (char**)ft_memalloc(sizeof(char*) * i + 1);
+	tmp = (char**)malloc(sizeof(char*) * i + 1);
 	tmp[0] = ft_strdup(ft_strrchr(var[0], '/') + 1);
 	while (var[z] != '\0')
 	{
@@ -121,5 +132,8 @@ void			slash_found(char **var, t_var *x, int i)
 		x->z = 0;
 	else
 		ft_printfcolor("zsh: command not found: %s\n", var[0], 97);
+	z = -1;
+	while (tmp[++z])
+		ft_memdel((void**)&tmp[z]);
 	ft_memdel((void**)&tmp);
 }

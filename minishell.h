@@ -56,6 +56,7 @@ void					slash_found(char **var, t_var *x, int i);
 void					memdelmat(char **comandos);
 void					access_cd_2(t_var *x, char **var, int i);
 void					new_old_path(t_var *x, char *tmp);
+void					memdelmat(char **comandos);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);

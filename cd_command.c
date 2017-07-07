@@ -124,6 +124,7 @@ void			access_cd_2(t_var *x, char **var, int i)
 			break ;
 	}
 	memdelmat(matrix);
+	ft_memdel((void**)&matrix);
 	cd_mod(x);
 	ft_memdel((void**)&x->original_path);
 }

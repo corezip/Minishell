@@ -124,5 +124,6 @@ void				set_env(t_var *x, char **str)
 		if (var[0] && var[1])
 			add_env(x, var);
 		memdelmat(var);
+		ft_memdel((void**)&var);
 	}
 }

@@ -19,7 +19,6 @@ void			ft_delmat(char ***matrix)
 	i = -1;
 	while (*matrix[++i])
 	{
-		printf("%s\n", *matrix[i]);
 		ft_memdel((void**)&*matrix[i]);
 	}
 }

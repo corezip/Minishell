@@ -12,6 +12,10 @@
 
 #include "minishell.h"
 
+/*
+** ---------------------------------------------------------------------------
+*/
+
 void				free_struct(t_var *x)
 {
 	ft_memdel((void**)&x->name);
@@ -46,7 +50,7 @@ char				**matrix_list(t_var *x)
 	}
 	j++;
 	free(tmp);
-	mat[j] = "\0";
+	mat[j] = NULL;
 	return (mat);
 }
 
@@ -88,16 +92,7 @@ void				init_var(t_var *x)
 ** Esta funcion separa el comando introducido para su seleccion de proceso.
 */
 
-void				memdelmat(char **comandos)
-{
-	int i;
 
-	i = -1;
-	while (comandos[++i])
-	{
-		ft_memdel((void**)&comandos[i]);
-	}
-}
 void				getcommand(char **line, t_var *x)
 {
 	char			**comandos;
@@ -123,6 +118,7 @@ void				getcommand(char **line, t_var *x)
 	else
 		ft_printfcolor("zsh: command not found: %s\n", comandos[0], 97);
 	memdelmat(comandos);
+	ft_memdel((void**)&comandos);
 }
 
 /*
