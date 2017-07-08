@@ -19,9 +19,10 @@
 int				back_cd(t_var *x)
 {
 	char		*tmp;
+	char		*tmp2;
 
-	tmp = ft_strsub(x->path, 0, ft_strlen(x->path) -
-	ft_strlen(ft_strrchr(x->path, '/')));
+	tmp2 = ft_strrchr(x->path, '/');
+	tmp = ft_strsub(x->path, 0, ft_strlen(x->path) - ft_strlen(tmp2));
 	if (ft_strlen(tmp) <= 0)
 		tmp = ft_strdup("/");
 	if (access(tmp, F_OK) == 0)
