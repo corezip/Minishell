@@ -13,7 +13,9 @@
 #include "minishell.h"
 
 /*
+** Free_struct
 ** ---------------------------------------------------------------------------
+** Libera todo los leaks creados en la estructura t_var *x;
 */
 
 void				free_struct(t_var *x)
@@ -44,13 +46,12 @@ char				**matrix_list(t_var *x)
 	mat = (char**)malloc(sizeof(char*) * i + 1);
 	while (tmp)
 	{
-		mat[++j] = (char*)malloc(sizeof(char) * ft_strlen(tmp->content) + 1);
-		mat[j] = ft_strdup(tmp->content);
+		mat[++j] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 	}
 	j++;
-	free(tmp);
 	mat[j] = NULL;
+	free(tmp);
 	return (mat);
 }
 
@@ -66,7 +67,6 @@ void				init_var(t_var *x)
 	char			*path;
 
 	path = getcwd(NULL, 0);
-	x->path = (char *)malloc(sizeof(100));
 	x->path = ft_strdup(path);
 	ft_memdel((void**)&path);
 	x->oldpath = ft_strdup(x->path);
@@ -92,11 +92,9 @@ void				init_var(t_var *x)
 ** Esta funcion separa el comando introducido para su seleccion de proceso.
 */
 
-
 void				getcommand(char **line, t_var *x)
 {
 	char			**comandos;
-	int i = -1;
 
 	comandos = ft_split_whitespaces(*line);
 	if (!ft_strcmp(comandos[0], "echo"))
@@ -127,7 +125,7 @@ void				getcommand(char **line, t_var *x)
 ** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
-int					main(int ac, char **av)
+int					main(void)
 {
 	char			*line;
 	t_var			*x;
@@ -137,7 +135,9 @@ int					main(int ac, char **av)
 	init_var(x);
 	while (1)
 	{
-		ft_printfcolor("%s%s%s ", "@", 36, x->name, 36, "$>", 36);
+		get_path(x);
+		ft_printfcolor("%s%s->%s%s ", "@", 36, x->name, 36, x->n, 97, "$>", 36);
+		ft_memdel((void**)&x->n);
 		if (line)
 			ft_memdel((void**)&line);
 		line = readline();
@@ -151,5 +151,5 @@ int					main(int ac, char **av)
 	}
 	ft_memdel((void**)&line);
 	free_struct(x);
-	return (ac);
+	return (0);
 }

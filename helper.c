@@ -16,6 +16,18 @@
 ** ---------------------------------------------------------------------------
 */
 
+void				get_path(t_var *x)
+{
+	char			*tmp;
+
+	tmp = ft_strrchr(x->path, '/') + 1;
+	x->n = ft_strdup(tmp);
+}
+
+/*
+** ---------------------------------------------------------------------------
+*/
+
 void				memdelmat(char **comandos)
 {
 	int i;
@@ -66,7 +78,7 @@ char				*readline(void)
 	buffsazo[ret - 1] = '\0';
 	line = ft_strsub(buffsazo, 0, ft_strlen(buffsazo));
 	return (line);
-} 
+}
 
 /*
 ** Cd_mod
@@ -76,7 +88,6 @@ char				*readline(void)
 
 void				cd_mod(t_var *x)
 {
-
 	char			*tmp;
 	char			*tmp2;
 	t_list			*new;

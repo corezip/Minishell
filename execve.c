@@ -35,23 +35,20 @@ int				print_command(t_var *x, char *path, char *command, char **var)
 	if (access(tmp2, X_OK) == 0)
 	{
 		x->z = 1;
-		ft_memdel((void**)&tmp);
 		if ((pid = fork()) == 0)
 		{
+			x->ret = 1;
 			execve(tmp2, var, matrix);
-			memdelmat(matrix);
-			ft_memdel((void**)&matrix);
-			ft_memdel((void**)&tmp2);
-			return (1);
 		}
 		else if (pid > 0)
 			pid = wait(0);
 	}
-	memdelmat(matrix);
-	ft_memdel((void**)&matrix);
+	x->ret = 0;
 	ft_memdel((void**)&tmp);
 	ft_memdel((void**)&tmp2);
-	return (0);
+	memdelmat(matrix);
+	ft_memdel((void**)&matrix);
+	return (x->ret);
 }
 
 /*
@@ -75,35 +72,25 @@ int				command_cmp(t_var *x, char **var, int i, int j)
 {
 	char		**matrix;
 	char		**path_mat;
-	int			z;
 
 	matrix = matrix_list(x);
-	// z = -1;
-	// while (matrix[++i])
-	// {
-	// 	if (!ft_strncmp("PATH=", matrix[i], 5))
-	// 	{
-	// 		path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
-	// 		while (path_mat[++j])
-	// 		{
-	// 			if (print_command(x, path_mat[j], var[0], var) == 1)
-	// 			{
-	// 				memdelmat(matrix);
-	// 				memdelmat(path_mat);
-	// 				ft_memdel((void**)&matrix);
-	// 				ft_memdel((void**)&path_mat);
-	// 				return (1);
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// memdelmat(path_mat);
-	// ft_memdel((void**)&path_mat);
-	z = -1;
-	while (matrix[++z])
-		ft_memdel((void**)&matrix[z]);
+	while (matrix[++i])
+	{
+		if (!ft_strncmp("PATH=", matrix[i], 5))
+		{
+			path_mat = ft_strsplit(ft_strchr(matrix[i], '=') + 1, ':');
+			while (path_mat[++j])
+			{
+				if (print_command(x, path_mat[j], var[0], var) == 1)
+					break ;
+			}
+			memdelmat(path_mat);
+			ft_memdel((void**)&path_mat);
+		}
+	}
+	memdelmat(matrix);
 	ft_memdel((void**)&matrix);
-	return (0);
+	return (x->ret);
 }
 
 /*

@@ -30,7 +30,7 @@ int				cd_error(t_var *x, char *line)
 ** ---------------------------------------------------------------------------
 */
 
-void				new_old_path(t_var *x, char *tmp)
+void			new_old_path(t_var *x, char *tmp)
 {
 	x->tmp_path = ft_strdup(tmp);
 	ft_memdel((void**)&x->oldpath);
@@ -44,7 +44,7 @@ void				new_old_path(t_var *x, char *tmp)
 ** ---------------------------------------------------------------------------
 */
 
-int					front_cd(t_var *x, char *var, int p)
+int				front_cd(t_var *x, char *var, int p)
 {
 	if (!ft_strcmp(var, "/"))
 	{

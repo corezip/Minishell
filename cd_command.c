@@ -16,9 +16,9 @@
 ** ---------------------------------------------------------------------------
 */
 
-int					back_cd(t_var *x)
+int				back_cd(t_var *x)
 {
-	char			*tmp;
+	char		*tmp;
 
 	tmp = ft_strsub(x->path, 0, ft_strlen(x->path) -
 	ft_strlen(ft_strrchr(x->path, '/')));
@@ -38,10 +38,10 @@ int					back_cd(t_var *x)
 ** ---------------------------------------------------------------------------
 */
 
-int					cd_dash(t_var *x)
+int				cd_dash(t_var *x)
 {
-	char			*tmp;
-	t_list			*new;
+	char		*tmp;
+	t_list		*new;
 
 	new = x->head;
 	while (new)
@@ -107,17 +107,17 @@ void			access_cd_2(t_var *x, char **var, int i)
 	matrix = ft_strsplit(var[1], '/');
 	x->original_path = ft_strdup(x->path);
 	if (var[1][0] == '/')
-			slash_cd_2(x, var);
+		slash_cd_2(x, var);
 	while (matrix[++i] && x->flag == 1)
 	{
 		if (!ft_strcmp(".", matrix[i]))
 			return ;
 		else if (!ft_strcmp("..", matrix[i]))
-			x->flag = back_cd(x); 
+			x->flag = back_cd(x);
 		else if (!ft_strcmp("~", matrix[i]))
 			x->flag = home_cd(x);
 		else if (!ft_strcmp("-", var[1]))
-			x->flag = cd_dash(x); 
+			x->flag = cd_dash(x);
 		else
 			x->flag = front_cd(x, matrix[i], 0);
 		if (cd_error(x, matrix[i]) == 1)

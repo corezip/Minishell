@@ -21,13 +21,23 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 
+/*
+** Path: en el que nos encontramos.
+** Tmp_path: path temporal donde guardaremos el path donde nos econtramos
+** para despues pasarlo al oldpath.
+** Oldpath: Path donde donde nos encotramos la vez pasada de usar cd.
+** Original_path: Path de seguridad por si al usar cd falla la carpeta donde
+** estamos.
+*/
+
 typedef	struct			s_var
 {
-	char				*path; //Path en el que nos encontramos
-	char				*tmp_path; //path temporal donde guardaremos el path donde nos econtramos para despues pasarlo al oldpath 
-	char				*oldpath; //Path donde donde nos encotramos la vez pasada de usar cd
-	char				*original_path; // Path de seguridad por si al usar cd falla la carpeta donde estamos.
+	char				*path;
+	char				*tmp_path;
+	char				*oldpath;
+	char				*original_path;
 	char				*name;
+	char				*n;
 	char				**command;
 	char				**dir;
 	char				*f_tmp;
@@ -35,6 +45,7 @@ typedef	struct			s_var
 	char				**cd_tmp;
 	char				*error;
 	int					flag;
+	int					ret;
 	int					no;
 	int					i;
 	int					z;
@@ -57,6 +68,7 @@ void					memdelmat(char **comandos);
 void					access_cd_2(t_var *x, char **var, int i);
 void					new_old_path(t_var *x, char *tmp);
 void					memdelmat(char **comandos);
+void					get_path(t_var *x);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);

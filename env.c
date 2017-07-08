@@ -20,17 +20,13 @@
 
 void				print_env(t_var *x)
 {
-	t_list *tmp;
-	char	*j;
-	int		i = 0;
+	t_list			*tmp;
 
 	tmp = x->head;
 	while (tmp)
 	{
-		j = tmp->content;
 		ft_printfcolor("%s\n", tmp->content, 39);
 		tmp = tmp->next;
-		i++;
 	}
 	free(tmp);
 }
