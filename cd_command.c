@@ -115,7 +115,7 @@ void			access_cd_2(t_var *x, char **var, int i)
 			return ;
 		else if (!ft_strcmp("..", x->matrix[i]))
 			x->flag = back_cd(x);
-		else if (!ft_strcmp("~", x->matrix[i]) || !var[1])
+		else if (!ft_strcmp("~", x->matrix[i]))
 			x->flag = home_cd(x);
 		else if (!ft_strcmp("-", var[1]))
 			x->flag = cd_dash(x);
