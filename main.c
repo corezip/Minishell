@@ -97,7 +97,9 @@ void				getcommand(char **line, t_var *x)
 	char			**comandos;
 
 	comandos = ft_split_whitespaces(*line);
-	if (!ft_strcmp(comandos[0], "cd") && comandos[1])
+	if (!comandos)
+		x->z = 0;
+	else if (!ft_strcmp(comandos[0], "cd"))
 		access_cd_2(x, comandos, -1);
 	else if (!ft_strcmp(comandos[0], "echo"))
 		choose_echo(1, comandos, x);

@@ -44,6 +44,7 @@ typedef	struct			s_var
 	char				*f_tmp2;
 	char				**cd_tmp;
 	char				*error;
+	char				**matrix;
 	int					flag;
 	int					ret;
 	int					no;

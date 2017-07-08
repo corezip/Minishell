@@ -103,29 +103,29 @@ int				slash_cd_2(t_var *x, char **var)
 
 void			access_cd_2(t_var *x, char **var, int i)
 {
-	char		**matrix;
-
-	matrix = ft_strsplit(var[1], '/');
+	x->matrix = ft_strsplit(var[1], '/');
 	x->original_path = ft_strdup(x->path);
-	if (var[1][0] == '/')
+	if (!var[1])
+		home_cd(x);
+	else if (var[1][0] == '/')
 		slash_cd_2(x, var);
-	while (matrix[++i] && x->flag == 1)
+	while (x->matrix[++i] && x->flag == 1)
 	{
-		if (!ft_strcmp(".", matrix[i]))
+		if (!ft_strcmp(".", x->matrix[i]))
 			return ;
-		else if (!ft_strcmp("..", matrix[i]))
+		else if (!ft_strcmp("..", x->matrix[i]))
 			x->flag = back_cd(x);
-		else if (!ft_strcmp("~", matrix[i]))
+		else if (!ft_strcmp("~", x->matrix[i]) || !var[1])
 			x->flag = home_cd(x);
 		else if (!ft_strcmp("-", var[1]))
 			x->flag = cd_dash(x);
 		else
-			x->flag = front_cd(x, matrix[i], 0);
-		if (cd_error(x, matrix[i]) == 1)
+			x->flag = front_cd(x, x->matrix[i], 0);
+		if (cd_error(x, x->matrix[i]) == 1)
 			break ;
 	}
-	memdelmat(matrix);
-	ft_memdel((void**)&matrix);
+	memdelmat(x->matrix);
+	ft_memdel((void**)&x->matrix);
 	cd_mod(x);
 	ft_memdel((void**)&x->original_path);
 }
