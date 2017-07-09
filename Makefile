@@ -2,7 +2,7 @@
 NAME	= minishell
 
 SRC		=	cd_command.c echo.c env.c execve.c helper.c main.c \
-ft_split_whitespaces.c cd.c
+ft_split_whitespaces.c cd.c bonus.c
 
 OBJ		= $(SRC:.c=.o)
 

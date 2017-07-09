@@ -6,7 +6,7 @@
 /*   By: gsolis <gsolis@student.42.us.org>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 20:04:09 by gsolis            #+#    #+#             */
-/*   Updated: 2017/06/16 20:04:10 by gsolis           ###   ########.fr       */
+/*   Updated: 2017/07/09 00:15:38 by gsolis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void				init_var(t_var *x)
 
 void				menu(t_var *x, char **comandos)
 {
-	if (!comandos)
+	if (!comandos[0] || !comandos)
 		x->z = 0;
 	else if (!ft_strcmp(comandos[0], "cd"))
 		access_cd_2(x, comandos, -1);
