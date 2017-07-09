@@ -13,7 +13,9 @@
 #include "minishell.h"
 
 /*
+** Back_cd
 ** ---------------------------------------------------------------------------
+** Funcion que retrocede en carpetas con el comando cd.
 */
 
 int				back_cd(t_var *x)
@@ -36,7 +38,9 @@ int				back_cd(t_var *x)
 }
 
 /*
+** Cd_dash
 ** ---------------------------------------------------------------------------
+** Funcion que cambia el viejo path por el path para hacer el comando "cd ~".
 */
 
 int				cd_dash(t_var *x)
@@ -59,7 +63,9 @@ int				cd_dash(t_var *x)
 }
 
 /*
+** Home_cd
 ** ---------------------------------------------------------------------------
+** Esta funcion nos creara el path del Home de la computadora.
 */
 
 int				home_cd(t_var *x)
@@ -82,7 +88,9 @@ int				home_cd(t_var *x)
 }
 
 /*
+** Slash_cd_2
 ** ---------------------------------------------------------------------------
+** Funcion con el que se logra entrar si el comando introducido es "cd /"
 */
 
 int				slash_cd_2(t_var *x, char **var)
@@ -98,7 +106,9 @@ int				slash_cd_2(t_var *x, char **var)
 }
 
 /*
+** Access_cd_2
 ** ---------------------------------------------------------------------------
+** Version 2 de la funcion Access_cd, la cual escoge la opcion del comando cd.
 */
 
 void			access_cd_2(t_var *x, char **var, int i)

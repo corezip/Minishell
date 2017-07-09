@@ -13,7 +13,9 @@
 #include "minishell.h"
 
 /*
+** Get_path
 ** ---------------------------------------------------------------------------
+** Funcion con la que tendremos la carpeta en donde nos encontemos con el Shell
 */
 
 void				get_path(t_var *x)
@@ -25,7 +27,9 @@ void				get_path(t_var *x)
 }
 
 /*
+** Memdelmat
 ** ---------------------------------------------------------------------------
+** Funcion con la que liberaremos el contenido de una matriz.
 */
 
 void				memdelmat(char **comandos)
@@ -40,7 +44,9 @@ void				memdelmat(char **comandos)
 }
 
 /*
+** Num_list
 ** ---------------------------------------------------------------------------
+** Funcion para contar el numero del contenido de una lista.
 */
 
 int					num_list(t_var *x)
@@ -60,7 +66,10 @@ int					num_list(t_var *x)
 }
 
 /*
+** Read_line
 ** ---------------------------------------------------------------------------
+** Funcion que leera lo introducido a la terminal que lo convertira en un
+** string.
 */
 
 char				*readline(void)

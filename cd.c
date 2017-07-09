@@ -13,7 +13,9 @@
 #include "minishell.h"
 
 /*
+** Cd_error
 ** ---------------------------------------------------------------------------
+** Funcion que es llamada para imprimir el error.
 */
 
 int				cd_error(t_var *x, char *line)
@@ -27,7 +29,10 @@ int				cd_error(t_var *x, char *line)
 }
 
 /*
+** New_old_path
 ** ---------------------------------------------------------------------------
+** Esta funcion hace el cambio del path al oldpath para poder meter el nuevo
+** path.
 */
 
 void			new_old_path(t_var *x, char *tmp)
@@ -41,7 +46,9 @@ void			new_old_path(t_var *x, char *tmp)
 }
 
 /*
+** Font_cd
 ** ---------------------------------------------------------------------------
+** Esta funcion crea el path con el que se ira hacia adelante en el cd.
 */
 
 int				front_cd(t_var *x, char *var, int p)

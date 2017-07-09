@@ -27,35 +27,6 @@ void				free_struct(t_var *x)
 }
 
 /*
-** Matrix_list
-** ---------------------------------------------------------------------------
-** Esta funcion se encarga de crear una matriz doble con todos los datos que
-** contiene t_list head(contiene los env), y regresando la.
-*/
-
-char				**matrix_list(t_var *x)
-{
-	t_list			*tmp;
-	char			**mat;
-	int				i;
-	int				j;
-
-	j = -1;
-	i = num_list(x);
-	tmp = x->head;
-	mat = (char**)malloc(sizeof(char*) * i + 1);
-	while (tmp)
-	{
-		mat[++j] = ft_strdup(tmp->content);
-		tmp = tmp->next;
-	}
-	j++;
-	mat[j] = NULL;
-	free(tmp);
-	return (mat);
-}
-
-/*
 ** Init_var
 ** ---------------------------------------------------------------------------
 ** Esta funcion inicializa las variables de la estructuras.
@@ -87,16 +58,13 @@ void				init_var(t_var *x)
 }
 
 /*
-** Getcommand
+** Menu
 ** ---------------------------------------------------------------------------
 ** Esta funcion separa el comando introducido para su seleccion de proceso.
 */
 
-void				getcommand(char **line, t_var *x)
+void				menu(t_var *x, char **comandos)
 {
-	char			**comandos;
-
-	comandos = ft_split_whitespaces(*line);
 	if (!comandos)
 		x->z = 0;
 	else if (!ft_strcmp(comandos[0], "cd"))
@@ -117,8 +85,41 @@ void				getcommand(char **line, t_var *x)
 		x->z = 0;
 	else
 		ft_printfcolor("zsh: command not found: %s\n", comandos[0], 97);
-	memdelmat(comandos);
-	ft_memdel((void**)&comandos);
+}
+
+/*
+** Getcommand
+** ---------------------------------------------------------------------------
+** Esta funcion separa el comando introducido para su seleccion de proceso.
+*/
+
+void				getcommand(char **line, t_var *x)
+{
+	char			**comandos;
+	char			**matrix;
+	int				i;
+
+	i = -1;
+	if (comas(*line) == 1)
+	{
+		matrix = ft_strsplit(*line, ';');
+		while (matrix[++i])
+		{
+			comandos = ft_split_whitespaces(matrix[i]);
+			menu(x, comandos);
+			memdelmat(comandos);
+			ft_memdel((void**)&comandos);
+		}
+		memdelmat(matrix);
+		ft_memdel((void**)&matrix);
+	}
+	else
+	{
+		comandos = ft_split_whitespaces(*line);
+		menu(x, comandos);
+		memdelmat(comandos);
+		ft_memdel((void**)&comandos);
+	}
 }
 
 /*

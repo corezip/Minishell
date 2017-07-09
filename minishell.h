@@ -22,12 +22,17 @@
 # include <sys/types.h>
 
 /*
+** ---------------------------------------------------------------------------
 ** Path: en el que nos encontramos.
+** ---------------------------------------------------------------------------
 ** Tmp_path: path temporal donde guardaremos el path donde nos econtramos
 ** para despues pasarlo al oldpath.
+** ---------------------------------------------------------------------------
 ** Oldpath: Path donde donde nos encotramos la vez pasada de usar cd.
+** ---------------------------------------------------------------------------
 ** Original_path: Path de seguridad por si al usar cd falla la carpeta donde
 ** estamos.
+** ---------------------------------------------------------------------------
 */
 
 typedef	struct			s_var
@@ -73,9 +78,11 @@ void					get_path(t_var *x);
 char					**matrix_list(t_var *x);
 char					**ft_split_whitespaces(char *str);
 char					*readline(void);
+char					**matrix_list(t_var *x);
 int						cd_error(t_var *x, char *line);
 int						command_cmp(t_var *x, char **var, int i, int j);
 int						num_list(t_var *x);
 int						front_cd(t_var *x, char *var, int p);
+int						comas(char *line);
 
 #endif
