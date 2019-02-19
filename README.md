@@ -24,7 +24,7 @@ Those versions are the ones used during development.
 
 1. Download/Clone this repo
 
-        git clone https://github.com/r4meau/minishell
+        git clone https://github.com/corezip/Minishell
 2. `cd` into the root directory and run `make`
 
         cd minishell
